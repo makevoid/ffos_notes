@@ -3,6 +3,14 @@
 <meta name="viewport" content="width=device-width">
 <style>
 
+body {
+  font-size: 1.5em;
+}
+
+input, textarea, button {
+  font-size: 1.5em;
+}
+
 textarea {
   width: 100%;
   min-height: 140px;
@@ -17,6 +25,9 @@ textarea {
     notes: [],
     textarea: null,
   }
+
+  var body = null
+
   var main = function(){
     log("initializing..")
     editor.textarea = dom.element("textarea")
@@ -24,6 +35,15 @@ textarea {
     if (store.note_1) {
       editor.textarea.value = store.note_1
     }
+
+    body = dom.element("body")
+    window.addEventListener("resize", (function(){
+      var body = this.querySelector("body")
+      console.log(body)
+      window.sbody = body
+      sbody.syle.fontFamily = "Arial"
+    }).bind(document))
+
     log("done")
   }
 
@@ -50,9 +70,7 @@ textarea {
 
 <h1>App!</h1>
 <button onclick="page.refresh()">refresh</button>
-<textarea>
-
-</textarea>
+<textarea></textarea>
 <button onclick="editor.save()">save</button>
 <section class="logs">
 </section>
