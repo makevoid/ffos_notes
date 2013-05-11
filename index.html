@@ -1,0 +1,58 @@
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<style>
+
+textarea {
+  width: 100%;
+  min-height: 140px;
+}
+
+</style>
+<script type="text/javascript">
+  var store = localStorage
+  var dom = {}
+  var page = {}
+  var editor = {
+    notes: [],
+    textarea: null,
+  }
+  var main = function(){
+    log("initializing..")
+    editor.textarea = dom.element("textarea")
+
+    if (store.note_1) {
+      editor.textarea.value = store.note_1
+    }
+    log("done")
+  }
+
+  var log = function(string){
+    var logs = dom.element(".logs")
+    logs.innerHTML = "<p>"+logs.innerHTML+string+"</p>"
+  }
+
+  dom.element = function(tag_name){
+    return document.querySelector(tag_name)
+  }
+
+  page.refresh = function(){
+    document.location = "/index.html"
+  }
+
+  editor.save = function(){
+    store.note_1 = this.textarea.value
+    log("saved")
+  }
+
+  document.addEventListener("DOMContentLoaded", main, false)
+</script>
+
+<h1>App!</h1>
+<button onclick="page.refresh()">refresh</button>
+<textarea>
+
+</textarea>
+<button onclick="editor.save()">save</button>
+<section class="logs">
+</section>
