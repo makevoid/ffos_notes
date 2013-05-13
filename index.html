@@ -5,72 +5,34 @@
 
 body {
   font-size: 1.5em;
+  margin: 0;
 }
 
 input, textarea, button {
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 
 textarea {
   width: 100%;
-  min-height: 140px;
+}
+
+h1 {
+  font-size: 1.6em;
+}
+
+.logs {
+  position: absolute;
+  bottom: 0;
+  background: rgba(200, 200, 200, 0.4);
+  padding: 0 0.5em;
 }
 
 </style>
-<script type="text/javascript">
-  var store = localStorage
-  var dom = {}
-  var page = {}
-  var editor = {
-    notes: [],
-    textarea: null,
-  }
-
-  var body = null
-
-  var main = function(){
-    log("initializing..")
-    editor.textarea = dom.element("textarea")
-
-    if (store.note_1) {
-      editor.textarea.value = store.note_1
-    }
-
-    body = dom.element("body")
-    window.addEventListener("resize", (function(){
-      var body = this.querySelector("body")
-      console.log(body)
-      window.sbody = body
-      sbody.syle.fontFamily = "Arial"
-    }).bind(document))
-
-    log("done")
-  }
-
-  var log = function(string){
-    var logs = dom.element(".logs")
-    logs.innerHTML = "<p>"+logs.innerHTML+string+"</p>"
-  }
-
-  dom.element = function(tag_name){
-    return document.querySelector(tag_name)
-  }
-
-  page.refresh = function(){
-    document.location = "/index.html"
-  }
-
-  editor.save = function(){
-    store.note_1 = this.textarea.value
-    log("saved")
-  }
-
-  document.addEventListener("DOMContentLoaded", main, false)
-</script>
+<script type="text/javascript" src="/js/main.js"></script>
 
 <h1>App!</h1>
 <button onclick="page.refresh()">refresh</button>
-<textarea></textarea>
 <button onclick="editor.save()">save</button>
+<textarea></textarea>
 <section class="logs">
 </section>
