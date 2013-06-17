@@ -1,5 +1,5 @@
-guard :coffeescript, input: "coffee", output: "js", bare: true
+guard :coffeescript, input: "coffee", output: "public/js", bare: true
 
 guard :livereload do
-   watch(%r{.+\.html})
+   watch(%r{public/.+\.html})
 end

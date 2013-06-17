@@ -54,4 +54,9 @@ editor.save = ->
   store.note_1 = @textarea.value
   log "saved"
 
+editor.sync = ->
+  $.post "/store", { note: store.note_1 }, (data) ->
+    console.log("stored?: ", data)
+  log "saved"
+
 document.addEventListener "DOMContentLoaded", main, false
