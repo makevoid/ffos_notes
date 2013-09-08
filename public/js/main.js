@@ -1,4 +1,4 @@
-var body, doc, dom, editor, log, main, page, resize_app, size_textarea, store;
+var body, current_time, doc, dom, editor, log, main, page, resize_app, size_textarea, store;
 
 store = localStorage;
 
@@ -23,12 +23,13 @@ doc = {
 body = null;
 
 main = function() {
-  var mq;
+  var mq, note;
 
   log("initializing..");
   editor.textarea = dom.element("textarea");
   if (store.note_1) {
-    editor.textarea.value = store.note_1;
+    note = JSON.parse(store.note_1);
+    editor.textarea.value = note.text;
   }
   body = dom.element("body");
   window.addEventListener("resize", function() {
@@ -62,6 +63,10 @@ size_textarea = function() {
   return editor.textarea.style.height = "" + height + "px";
 };
 
+current_time = function() {
+  return new Date().getTime();
+};
+
 log = function(string) {
   var logs;
 
@@ -78,8 +83,41 @@ page.refresh = function() {
 };
 
 editor.save = function() {
-  store.note_1 = this.textarea.value;
+  var note;
+
+  store.notes = 1;
+  note = {
+    text: this.textarea.value,
+    time: current_time()
+  };
+  store.note_1 = JSON.stringify(note);
   return log("saved");
+};
+
+editor.load = function() {
+  var _this = this;
+
+  $.getJSON("/load", function(data) {
+    if (data.note) {
+      _this.textarea.value = data.note;
+    }
+    return log("loaded");
+  });
+  return log("loading");
+};
+
+editor.sync = function() {
+  var note;
+
+  note = {
+    text: store.note_1,
+    time: store.timestamp_1
+  };
+  $.post("/store", note, function(data) {
+    console.log("stored:", data);
+    return log("sync done");
+  });
+  return log("sync started");
 };
 
 document.addEventListener("DOMContentLoaded", main, false);

@@ -14,7 +14,9 @@ body = null
 main = ->
   log "initializing.."
   editor.textarea = dom.element "textarea"
-  editor.textarea.value = store.note_1  if store.note_1
+  if store.note_1
+    note = JSON.parse store.note_1
+    editor.textarea.value = note.text  
   body = dom.element("body")
   window.addEventListener "resize", ->
     resize_app()
@@ -40,6 +42,9 @@ size_textarea = ->
   height = doc.height()/3 + 100 # header
   editor.textarea.style.height = "#{height}px"
 
+current_time = ->
+  new Date().getTime()
+
 log = (string) ->
   logs = dom.element(".logs")
   logs.innerHTML = "<p>" + logs.innerHTML + string + "</p>"
@@ -51,12 +56,23 @@ page.refresh = ->
   document.location = "/index.html"
 
 editor.save = ->
-  store.note_1 = @textarea.value
+  store.notes = 1
+  note = { text: @textarea.value, time: current_time() }
+  store.note_1 = JSON.stringify note
   log "saved"
 
+editor.load = ->
+  $.getJSON "/load", (data) =>
+    # data.time
+    @textarea.value = data.note if data.note
+    log "loaded"
+  log "loading"
+
 editor.sync = ->
-  $.post "/store", { note: store.note_1 }, (data) ->
-    console.log("stored?: ", data)
-  log "saved"
+  note = { text: store.note_1, time: store.timestamp_1 }
+  $.post "/store", note, (data) ->
+    console.log "stored:", data
+    log "sync done"
+  log "sync started"
 
 document.addEventListener "DOMContentLoaded", main, false
